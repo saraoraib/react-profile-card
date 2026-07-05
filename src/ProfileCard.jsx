@@ -1,12 +1,11 @@
-import './ProfileCard.css';
+function ProfileCard(props) {
+  return (
+    <div className="profile-card">
+      <h2>{props.name}</h2>
+      <p>{props.title}</p>
+      <p>{props.bio}</p>
+    </div>
+  );
+}
 
-   function ProfileCard() {
-     return (
-       <div className="profile-card">
-         <h2>Sara Oraib</h2>
-         <p>AI Engineer learning react:)</p>
-       </div>
-     );
-   }
-
-   export default ProfileCard;
+export default ProfileCard;
