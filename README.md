@@ -1,5 +1,1 @@
-![Image Alt](https://github.com/saraoraib/react-profile-card/blob/093310f54770b774c6a3b7a3fb6e8b17bd10ab51/1.png)
-![Image Alt](https://github.com/saraoraib/react-profile-card/blob/093310f54770b774c6a3b7a3fb6e8b17bd10ab51/2.png)
-![Image Alt](https://github.com/saraoraib/react-profile-card/blob/093310f54770b774c6a3b7a3fb6e8b17bd10ab51/3.png)
-![Image Alt](https://github.com/saraoraib/react-profile-card/blob/093310f54770b774c6a3b7a3fb6e8b17bd10ab51/4.png)
-![Image Alt](https://github.com/saraoraib/react-profile-card/blob/093310f54770b774c6a3b7a3fb6e8b17bd10ab51/5.png)
+
