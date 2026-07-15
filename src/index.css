@@ -314,3 +314,93 @@ p {
   line-height: 1.6;
   min-height: 24px;
 }
+
+.profile-tab p {
+  text-align: left;
+}
+
+.tasks-summary {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px;
+  text-align: left;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.task-check {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.task-check.checked {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.task-text {
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.task-text.done {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-list .notification-item {
+  margin-bottom: 8px;
+}
+
+.app-header {
+  background: #3273db;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.app-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 20px;
+}
+
+.app-footer {
+  background: #3273db;
+  color: #040d19;
+  text-align: center;
+  padding: 16px;
+  font-size: 13px;
+  margin-top: 40px;
+}
+
