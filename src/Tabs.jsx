@@ -1,113 +1,195 @@
 import { useState, useEffect } from 'react';
+import { getTabs } from './tabs';
 
 function Tabs() {
-  const [activeTab, setActiveTab] = useState('profile');
-  const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState('user');
+
+  const [tabs, setTabs] = useState([]);
+  const [activeTab, setActiveTab] = useState('');
+  const [loadingTabs, setLoadingTabs] = useState(true);
+
+  const [loadingContent, setLoadingContent] = useState(false);
   const [data, setData] = useState({});
 
-  const tabs = [
-    { id: 'profile', label: 'Profile' },
-    { id: 'tasks', label: 'Tasks' },
-    { id: 'notifications', label: 'Notifications' },
-  ];
+  useEffect(() => {
+    async function loadTabs() {
+      setLoadingTabs(true);
 
-  const urls = {
-    profile: 'https://jsonplaceholder.typicode.com/users/1',
-    tasks: 'https://jsonplaceholder.typicode.com/todos?userId=1&_limit=5',
-    notifications: 'https://jsonplaceholder.typicode.com/posts?userId=1&_limit=4',
-  };
+      const result = await getTabs(role);
+
+      setTabs(result);
+      setActiveTab(result[0].id);
+
+      setLoadingTabs(false);
+    }
+
+    loadTabs();
+  }, [role]);
+
+  const currentTab = tabs.find(tab => tab.id === activeTab);
 
   useEffect(() => {
-    async function loadData() {
-      if (data[activeTab]) return; 
+    if (!currentTab) return;
 
-      setLoading(true);
-      const res = await fetch(urls[activeTab]);
+    async function loadData() {
+      if (data[activeTab]) return;
+
+      setLoadingContent(true);
+
+      const res = await fetch(currentTab.url);
       const result = await res.json();
-      setData({ ...data, [activeTab]: result });
-      setLoading(false);
+
+      setData(prev => ({
+        ...prev,
+        [activeTab]: result,
+      }));
+
+      setLoadingContent(false);
     }
+
     loadData();
-  }, [activeTab]);
+  }, [activeTab, currentTab]);
 
   function toggleTask(id) {
-    const updatedTasks = data.tasks.map(task =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    );
-    setData({ ...data, tasks: updatedTasks });
+    setData(prev => ({
+      ...prev,
+      tasks: prev.tasks.map(task =>
+        task.id === id
+          ? { ...task, completed: !task.completed }
+          : task
+      ),
+    }));
   }
 
   function renderContent() {
     const result = data[activeTab];
+
     if (!result) return null;
 
-    if (activeTab === 'profile') {
-      return (
-        <div className="profile-tab">
-          <p className="tab-title">{result.name}</p>
-          <p className="tab-sub">@{result.username}</p>
-          <p className="tab-sub">{result.email}</p>
-          <p className="tab-sub">{result.company.name}</p>
-          <p className="tab-sub">{result.address.city}</p>
-        </div>
-      );
-    }
+    switch (activeTab) {
+      case 'profile':
+        return (
+          <div className="profile-tab">
+            <p className="tab-title">{result.name}</p>
+            <p className="tab-sub">@{result.username}</p>
+            <p className="tab-sub">{result.email}</p>
+            <p className="tab-sub">{result.company.name}</p>
+            <p className="tab-sub">{result.address.city}</p>
+          </div>
+        );
 
-    if (activeTab === 'tasks') {
-      const doneCount = result.filter(t => t.completed).length;
-      return (
-        <div>
-          <p className="tasks-summary">{doneCount} of {result.length} completed</p>
-          <ul className="task-list">
-            {result.map(task => (
-              <li key={task.id} className="task-item" onClick={() => toggleTask(task.id)}>
-                <span className={`task-check ${task.completed ? 'checked' : ''}`}>
-                  {task.completed ? 'Y' : ''}
-                </span>
-                <span className={`task-text ${task.completed ? 'done' : ''}`}>
-                  {task.title}
-                </span>
+      case 'tasks':
+        const doneCount = result.filter(task => task.completed).length;
+
+        return (
+          <div>
+            <p className="tasks-summary">
+              {doneCount} of {result.length} completed
+            </p>
+
+            <ul className="task-list">
+              {result.map(task => (
+                <li
+                  key={task.id}
+                  className="task-item"
+                  onClick={() => toggleTask(task.id)}
+                >
+                  <span
+                    className={`task-check ${
+                      task.completed ? 'checked' : ''
+                    }`}
+                  >
+                    {task.completed ? 'Y' : ''}
+                  </span>
+
+                  <span
+                    className={`task-text ${
+                      task.completed ? 'done' : ''
+                    }`}
+                  >
+                    {task.title}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+
+      case 'notifications':
+        return (
+          <ul className="notification-list">
+            {result.map((post, index) => (
+              <li key={post.id} className="notification-item">
+                <span className="notification-dot"></span>
+
+                <div>
+                  <p className="notification-title">
+                    {post.title}
+                  </p>
+
+                  <p className="notification-time">
+                    {index + 1}h ago
+                  </p>
+                </div>
               </li>
             ))}
           </ul>
-        </div>
-      );
-    }
+        );
 
-    if (activeTab === 'notifications') {
-      return (
-        <ul className="notification-list">
-          {result.map((post, index) => (
-            <li key={post.id} className="notification-item">
-              <span className="notification-dot"></span>
-              <div>
-                <p className="notification-title">{post.title}</p>
-                <p className="notification-time">{index + 1}h ago</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      );
+      default:
+        return null;
     }
   }
 
   return (
     <div className="tabs">
-      <div className="tab-buttons">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="role-switcher">
+        <label>
+          <input
+            type="radio"
+            checked={role === 'user'}
+            onChange={() => setRole('user')}
+          />
+          User
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            checked={role === 'admin'}
+            onChange={() => setRole('admin')}
+          />
+          Admin
+        </label>
       </div>
 
-      <div className="tab-content">
-        {loading ? <div className="spinner"></div> : renderContent()}
-      </div>
+      {loadingTabs ? (
+        <div className="spinner"></div>
+      ) : (
+        <>
+          <div className="tab-buttons">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                className={`tab-button ${
+                  activeTab === tab.id ? 'active' : ''
+                }`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="tab-content">
+            {loadingContent ? (
+              <div className="spinner"></div>
+            ) : (
+              renderContent()
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
