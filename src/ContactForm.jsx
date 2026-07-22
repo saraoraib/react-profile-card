@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 function ContactForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -10,7 +12,7 @@ function ContactForm() {
   const validate = () => {
     const newErrors = {};
     if (name.trim() === '') newErrors.name = true;
-    if (!email.includes('@')) newErrors.email = true;
+    if (!EMAIL_REGEX.test(email.trim())) newErrors.email = true;
     if (message.trim() === '') newErrors.message = true;
     return newErrors;
   };
@@ -30,7 +32,7 @@ function ContactForm() {
       {submitted ? (
         <p className="success-message">Thanks, {name}! Your message has been received.</p>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <label className="form-label">
             Name
             <input
@@ -40,6 +42,7 @@ function ContactForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+            {errors.name && <span className="field-error">Please enter your name.</span>}
           </label>
 
           <label className="form-label">
@@ -51,6 +54,7 @@ function ContactForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && <span className="field-error">Please enter a valid email address.</span>}
           </label>
 
           <label className="form-label">
@@ -62,6 +66,7 @@ function ContactForm() {
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
             />
+            {errors.message && <span className="field-error">Please enter a message.</span>}
           </label>
 
           <button type="submit" className="form-button">Send</button>
