@@ -1,6 +1,15 @@
-function ExperienceCounter({ value, onChange, min = 0, max = 20 }) {
-  const increment = () => onChange(Math.min(value + 1, max));
-  const decrement = () => onChange(Math.max(value - 1, min));
+import { useState } from "react";
+
+function ExperienceCounter({ min = 0, max = 20 }) {
+  const [value, setValue] = useState(0);
+
+  const increment = () => {
+    setValue(Math.min(value + 1, max));
+  };
+
+  const decrement = () => {
+    setValue(Math.max(value - 1, min));
+  };
 
   return (
     <div className="experience-counter">
@@ -13,9 +22,11 @@ function ExperienceCounter({ value, onChange, min = 0, max = 20 }) {
       >
         −
       </button>
+
       <span className="counter-value-small">
-        {value} {value === 1 ? 'year' : 'years'}
+        {value} {value === 1 ? "year" : "years"}
       </span>
+
       <button
         type="button"
         className="counter-btn"
