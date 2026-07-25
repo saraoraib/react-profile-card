@@ -155,7 +155,12 @@ function JobApplicationForm() {
                 placeholder="Tell us why you're a great fit (min 20 characters)..."
                 onChange={(e) => updateField('coverLetter', e.target.value)}
               />
-              {errors.coverLetter && <span className="field-error">Please write at least 20 characters.</span>}
+              <div className="char-counter-row">
+                <span className={form.coverLetter.length < 20 ? 'char-counter warning' : 'char-counter'}>
+                  {form.coverLetter.length} / 20 minimum
+                </span>
+                {errors.coverLetter && <span className="field-error">Please write at least 20 characters.</span>}
+              </div>
             </label>
 
             <label className="form-label">

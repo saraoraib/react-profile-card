@@ -1,3 +1,5 @@
+import { useColor } from './ColorContext';
+
 function Footer() {
   return (
     <footer className="app-footer">

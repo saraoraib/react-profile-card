@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { ColorProvider, useColor } from './ColorContext';
 import Home from './Home';
 import About from './About';
 import Profile from './Profile';
@@ -9,15 +9,15 @@ import Tasks from './Tasks';
 import Contact from './Contact';
 import Header from './Header';
 import Footer from './Footer';
+import UserProfile from './UserProfile';
 
-function App() {
-  const [bgColor, setBgColor] = useState('#f5f7fa');
+function AppContent() {
+  const { bgColor } = useColor();
 
   return (
     <div style={{ background: bgColor, minHeight: '100vh', display: 'flex', flexDirection: 'column', transition: 'background 0.2s' }}>
       <BrowserRouter>
-        <Header color={bgColor} onChange={setBgColor} />
-
+        <Header />
         <main style={{ flex: 1 }}>
           <nav>
             <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/profile">Profile</Link> | <Link to="/search">Search</Link> | <Link to="/dashboard">Dashboard</Link> | <Link to="/tasks">Tasks</Link> | <Link to="/contact">Contact Us</Link>
@@ -31,12 +31,20 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/user/:id" element={<UserProfile />} />
           </Routes>
         </main>
-
-        <Footer color={bgColor} />
+        <Footer />
       </BrowserRouter>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ColorProvider>
+      <AppContent />
+    </ColorProvider>
   );
 }
 
