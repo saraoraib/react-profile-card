@@ -1,13 +1,7 @@
-import { useState, useEffect } from 'react';
+import useLocalStorage from './useLocalStorage';
 
 function NotesBox() {
-  const [note, setNote] = useState(() => {
-    return localStorage.getItem('note') || '';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('note', note);
-  }, [note]);
+  const [note, setNote] = useLocalStorage('note', '');
 
   return (
     <div className="notes-box">
@@ -16,10 +10,9 @@ function NotesBox() {
         value={note}
         onChange={(e) => setNote(e.target.value)}
         rows={5}
-        cols={40}
         placeholder="Write something..."
       />
-      <p>Saved automatically</p>
+      <p>Saved automatically as you type.</p>
     </div>
   );
 }
